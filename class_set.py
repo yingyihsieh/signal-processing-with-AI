@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import itertools
+import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
 class Save_and_load():
@@ -84,3 +87,58 @@ class Deal_with_data():
             set_array[:, (6 * i + 4)] = self.data_statistic1(i)[4 * row_num:5 * row_num]
             set_array[:, (6 * i + 5)] = self.data_statistic1(i)[5 * row_num:6 * row_num]
         return set_array
+
+class Visual_table():
+
+    def balance_activities(self,label):
+        act, act_counts = np.unique(label, return_counts=True)
+        for i in range(len(act_counts)):
+            act_counts[i] = act_counts[i] / label.shape[0] * 100
+
+        plt.figure()
+        plt.bar(act, act_counts, width=0.3, facecolor='red', label='train')
+        plt.xlabel('activity')
+        plt.ylabel('percent(%)')
+        plt.legend()
+        plt.show()
+
+    def box_activities(self,data,label,data_name):
+        df1=pd.DataFrame()
+        for i in range(len(data_name)):
+            df1[data_name[i]]= data[:,6*i]
+        df1['label']=label
+        label_map={1:'WALKING',2:'WALKING_UPSTAIRS',3:'WALKING_DOWNSTAIRS',
+                   4:'SITTING',5:'STANDING',6:'LAYING'}
+        df1['label']=df1['label'].map(label_map)
+        fig = plt.figure(figsize=(15, 12))
+        fig.subplots_adjust(wspace=0.4, hspace=0.8, top=0.95)
+        count = 0
+        for name in data_name:
+            plt.subplot(3, 3, count + 1)
+            sns.boxplot(x='label', y=name, data=df1)
+            plt.xticks(rotation=60)
+            count += 1
+        plt.show()
+
+    def plot_confusion_matrix(self, cm, classes, normalize=False,
+                              title='Confusion matrix', cmap=plt.cm.Blues):
+        if normalize:
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+        plt.imshow(cm, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=90)
+        plt.yticks(tick_marks, classes)
+
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, format(cm[i, j], fmt),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
