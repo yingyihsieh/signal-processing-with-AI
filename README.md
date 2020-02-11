@@ -34,4 +34,4 @@ Deep Learning
 - save clear data to Mysql database
 - load clear data from Mysql database
 - show three-dimensional avg acceleration for each sensor
-
+- show DL visual table
