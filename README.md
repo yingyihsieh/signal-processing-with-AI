@@ -18,9 +18,9 @@ Data visualization
 - show accuracy score
 - show confuse matrix               
 Deep Learning              
--design CNN model
--design LSTM model
--compare with Random Forest, improve accuracy more than 90
+- design CNN model
+- design LSTM model
+- compare with Random Forest, improve accuracy more than 90
 3. Environment setting up
 - Python 3.6
 - Tensorflow 1.4
